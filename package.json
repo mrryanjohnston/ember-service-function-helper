@@ -1,13 +1,16 @@
 {
   "name": "ember-service-function-helper",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "Pass service functions like closure actions into components.",
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrryanjohnston/ember-service-function-helper.git"
+  },
   "license": "MIT",
-  "author": "",
+  "author": "Ryan Johnston <mrryanjohnston@gmail.com>",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -48,10 +51,15 @@
     "loader.js": "^4.2.3",
     "qunit-dom": "^0.6.2"
   },
+  "keywords": [
+    "ember-addon",
+    "helper"
+  ],
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
-  }
+  },
+  "homepage": "https://github.com/mrryanjohnston/ember-service-function-helper"
 }
