@@ -1,3 +1,9 @@
-<h2 id="title">Welcome to Ember</h2>
-
-{{outlet}}
+<p>From <code>application.hbs</code>:</p>
+<button onclick={{action (service-function "myService" "addToState" "foo")}}>Add 'foo' to state</button>
+{{my-component do=(service-function "myService" "addToState")}}
+{{my-component doAll=(service-function "myService" "addThreeToState" "foo")}}
+{{my-component-3 do=(service-function "myService" "addToState")}}
+<p>State from service:</p>
+{{#each myService.state as |thing|}}
+  {{thing}}
+{{/each}}

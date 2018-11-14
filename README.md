@@ -1,24 +1,154 @@
-ember-service-function-helper
-==============================================================================
+# ember-service-function-helper
 
-[Short description of the addon.]
+Pass service functions like closure actions into components.
 
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 ```
 ember install ember-service-function-helper
 ```
 
+## Usage
 
-Usage
-------------------------------------------------------------------------------
+`service-function` takes two or more arguments:
 
-[Longer description of how to use the addon in apps.]
+1. Name of service
+2. Name of function defined in service
+3. Argument to pass to function
 
+In use, it looks like this:
 
-Contributing
-------------------------------------------------------------------------------
+```hbs
+{{!-- like a closure action --}}
+logout=(service-function "session" "logout")
+{{!-- or just an action --}}
+onclick={{action (service-function "session" "logout")}}
+```
+
+## Examples
+
+### Directly in a template 
+
+To use this directly in a template as the result of an `onclick` or something
+similar:
+
+```javascript
+// my-service.js
+import { A } from '@ember/array';
+import Service from '@ember/service';
+
+export default Service.extend({
+  state: null,
+  init() {
+    this.set('state', A(['a']));
+    this._super(...arguments);
+  },
+  addToState(toAdd) {
+    this.get('state').pushObject(toAdd);
+  }
+});
+```
+
+```hbs
+{{!-- application.hbs --}}
+<button onclick={{action (service-function "myService" "addToState" "foo")}}>Add 'foo' to state</button>
+```
+
+### Like a Closure Action
+
+You can also pass it into a component just like you would a closure action:
+
+```hbs
+{{!-- application.hbs --}}
+{{my-component do=(service-function "myService" "addToState")}}
+```
+
+You could then use this as the result of some user event inside of `my-component` like so:
+
+```hbs
+{{!-- my-component.hbs --}}
+<button onclick={{action do 'bar'}}>Add 'bar' to state</button>
+```
+
+Alternatively, you could do this:
+
+```javascript
+// my-component.js
+import Component from '@ember/component';
+
+export default Component.extend({
+  actions: {
+    do (thing) {
+      // Note: `this.get('do')(thing)` will not work!
+      this.do(thing);
+    }
+  }
+});
+```
+
+```hbs
+{{!-- my-component.hbs --}}
+<button onclick={{action "do" "bat"}}>Add bat</button>
+```
+
+It then follows that something like this could work, too:
+
+```hbs
+{{!-- my-component.hbs --}}
+{{my-component-2 do=(action "do" "qux")}}
+```
+
+```hbs
+{{!-- my-component-2.hbs --}}
+<button onclick={{action do}}>Do!</button>
+```
+
+### Currying Arguments
+
+You can also curry arguments just like with the `action` helper:
+
+```javascript
+// my-service.js
+import { A } from '@ember/array';
+import Service from '@ember/service';
+
+export default Service.extend({
+  state: null,
+  init() {
+    this.set('state', A(['a']));
+    this._super(...arguments);
+  },
+  addThreeToState(one, two, three) {
+    this.get('state').pushObject(one);
+    this.get('state').pushObject(two);
+    this.get('state').pushObject(three);
+  }
+});
+```
+
+```hbs
+{{!-- application.hbs --}}
+{{my-component do=(service-function "myService" "addThreeToState" "foo")}}
+```
+
+```hbs
+{{!-- my-component.hbs --}}
+{{my-component-2 do=(action do "bar")}}
+```
+
+```hbs
+{{!-- my-component-2.hbs --}}
+<button onclick={{action do "bat"}}>Add foo, bar and bat</button>
+```
+
+## Why would you use this?
+
+* You can avoid `inject`ing services into controllers or components
+* You can avoid writing wrapper `actions` around `service` functionality
+* This can decouple component behavior from implementation
+* You can mock less services in tests
+
+## Contributing
 
 ### Installation
 
@@ -44,7 +174,6 @@ Contributing
 
 For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
 
-License
-------------------------------------------------------------------------------
+## License
 
 This project is licensed under the [MIT License](LICENSE.md).

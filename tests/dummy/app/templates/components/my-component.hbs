@@ -1,0 +1,6 @@
+{{#if doAll}}
+  {{my-component-2 do=(action doAll 'bar')}}
+{{else}}
+  <p>From <code>my-component.hbs</code>:</p>
+  <button onclick={{action do 'bar'}}>Add 'bar' to state</button>
+{{/if}}
